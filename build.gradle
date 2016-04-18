@@ -1,0 +1,50 @@
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "com.gradle.publish:plugin-publish-plugin:0.9.4"
+  }
+}
+
+apply plugin: "com.gradle.plugin-publish"
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+repositories {
+    jcenter()
+}
+
+version = "1.0"
+group = "gov.loc.repository"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    compile 'org.slf4j:slf4j-api:1.7.18',
+    'org.apache.httpcomponents:httpclient:4.5.1',
+    'org.apache.httpcomponents:httpmime:4.5.1',
+    'com.google.code.gson:gson:2.5',
+    gradleApi()
+
+    testCompile 'junit:junit:4.12', 
+    'org.mockito:mockito-core:1.10.19',
+    gradleTestKit()
+}
+
+pluginBundle {
+  website = 'https://github.com/libraryofcongress'
+  vcsUrl = 'https://github.com/libraryofcongress/artifactory-plugin'
+  description = 'Upload artifacts to artifactory using rest api'
+  tags = ['artifactory', 'upload', 'rest-api']
+
+  plugins {
+    greetingsPlugin {
+      id = 'gov.loc.repository.artifactory'
+      displayName = 'Simple Artifactory plugin'
+    }
+  }
+}
