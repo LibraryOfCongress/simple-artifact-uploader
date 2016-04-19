@@ -13,13 +13,17 @@ import java.util.Objects;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.GradleException;
@@ -41,10 +45,15 @@ import gov.loc.repository.hash.Hasher;
 public class UploadTask extends DefaultTask{
   private static final Logger logger = Logging.getLogger(UploadTask.class);
   private static final String API = "api/storage";
-  private HttpClient client = HttpClientBuilder.create().build();
+  private HttpClient client;
+  private final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
   
   public UploadTask(){
     this.setDescription("If a project generates an artifact, upload it to artifactory");
+    
+    client = HttpClients.custom()
+        .setDefaultCredentialsProvider(credentialsProvider)
+        .build();
   }
 
   @TaskAction
@@ -60,7 +69,7 @@ public class UploadTask extends DefaultTask{
       try{
         ArtifactHashes hashes = calculateHashes(artifact);
         if(hashesDiffer(hashes, extension.getRepository(), extension.getFolder(), artifact.getName(), extension.getUrl())){
-          upload(extension.getRepository(), extension.getFolder(), artifact.getName(), artifact, extension.getUrl());
+          upload(extension, artifact);
         }
         else{
           logger.quiet("Skipping upload since checksums match for {}", artifact);
@@ -121,12 +130,16 @@ public class UploadTask extends DefaultTask{
     return new ArtifactHashes(sha1, md5);
   }
   
-  private void upload(String repo, String folder, String artifactName, File artifactPath, String artifactoryUrl) throws ClientProtocolException, IOException{
-    HttpEntity entity = MultipartEntityBuilder.create().addBinaryBody(artifactName, artifactPath, ContentType.create("application/octet-stream"), artifactName).build();
+  private void upload(UploadPluginExtension ext, File artifact) throws ClientProtocolException, IOException{
+    HttpEntity entity = MultipartEntityBuilder.create().addBinaryBody(artifact.getName(), artifact, ContentType.create("application/octet-stream"), artifact.getName()).build();
     
     StringBuilder url = new StringBuilder();
-    url.append(artifactoryUrl).append("/").append(repo).append("/").append(folder).append(artifactName);
-    logger.debug("Uploading {} to {}", artifactName, url.toString());
+    url.append(ext.getUrl()).append("/").append(ext.getRepository()).append("/").append(ext.getFolder()).append("/").append(artifact.getName());
+    logger.debug("Uploading {} to {}", artifact.getName(), url.toString());
+    
+    credentialsProvider.setCredentials(
+        new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
+        new UsernamePasswordCredentials(ext.getUsername(), ext.getPassword()));
     
     HttpPut request = new HttpPut(url.toString());
     request.setEntity(entity);
@@ -136,6 +149,8 @@ public class UploadTask extends DefaultTask{
     if(response.getStatusLine().getStatusCode() != 201){
       throw new GradleException("Unable to upload artifact. Response from artifactory was " + response.getStatusLine());
     }
+    
+    logger.debug("Uploaded {} successfully!", artifact.getName());
   }
 
   /**
