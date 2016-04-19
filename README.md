@@ -5,6 +5,8 @@ Since the offical artifactory plugin is so hard to configure, I created this plu
 
 [![Gradle plugin download](https://img.shields.io/badge/gradle%20plugin-latest-brightgreen.svg)](https://plugins.gradle.org/plugin/gov.loc.repository.artifactory)
 
+[![License](https://img.shields.io/badge/License-Public--Domain-blue.svg)](https://github.com/loc-rdc/artifactory-plugin/blob/master/LICENSE.txt)
+
 ## Adding to your build script
 see https://plugins.gradle.org/plugin/gov.loc.repository.artifactory
 
