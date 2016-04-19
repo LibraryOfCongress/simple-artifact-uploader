@@ -3,6 +3,9 @@ A plugin for uploading gradle artifacts to artifactory
 
 Since the offical artifactory plugin is so hard to configure, I created this plugin to upload artifacts based on their rest api.
 
+## Adding to your build script
+see https://plugins.gradle.org/plugin/gov.loc.repository.artifactory
+
 ##Example use in gradle build script
 ``` groovy
 artifactory{
