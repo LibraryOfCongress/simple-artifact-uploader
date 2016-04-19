@@ -3,6 +3,8 @@ A plugin for uploading gradle artifacts to artifactory
 
 Since the offical artifactory plugin is so hard to configure, I created this plugin to upload artifacts based on their rest api.
 
+[![Gradle plugin download](https://img.shields.io/badge/gradle%20plugin-latest-brightgreen.svg)](https://plugins.gradle.org/plugin/gov.loc.repository.artifactory)
+
 ## Adding to your build script
 see https://plugins.gradle.org/plugin/gov.loc.repository.artifactory
 
