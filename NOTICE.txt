@@ -1,0 +1,8 @@
+Acknowledgements
+----------------
+This software uses code from the following projects:
+ * slf4j (http://www.slf4j.org/)
+ * httpclient (https://hc.apache.org/index.html)
+ * gson (https://github.com/google/gson)
+
+Please see LICENSE.txt for the licenses that apply to these dependencies.
