@@ -2,6 +2,9 @@ plugins {
   id "com.gradle.plugin-publish" version "0.9.4"
   id "java-gradle-plugin"
   id "eclipse"
+  id "jacoco"
+  id "findbugs"
+  id "pmd"
 }
 
 repositories {
@@ -44,3 +47,34 @@ project.dependencies {
   'org.apache.httpcomponents:httpmime:4.5.1',
   'com.google.code.gson:gson:2.5'
 }
+
+jacoco {
+  toolVersion = "0.7.5.201505241946" //needed for jenkins to report code coverage correctly
+}
+
+findbugsTest.enabled = false
+
+findbugs {
+  ignoreFailures = true //don't fail the gradle build if bugs are found
+}
+
+pmdTest.enabled = false
+
+pmd {
+  ruleSets = ["java-basic", "java-braces", "java-empty"]
+}
+
+jacocoTestReport {
+  reports {
+      xml.enabled = true // coveralls plugin depends on xml format report
+      html.enabled = true
+  }
+}
+
+//Keep this for easy viewing of html findbugs report
+//tasks.withType(FindBugs) {
+//  reports {
+//      xml.enabled = false
+//      html.enabled = true
+//  }
+//}
