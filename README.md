@@ -5,12 +5,16 @@ Since the offical artifactory plugin is so hard to configure, I created this plu
 
 [![Gradle plugin download](https://img.shields.io/badge/gradle%20plugin-latest-brightgreen.svg)](https://plugins.gradle.org/plugin/gov.loc.repository.artifactory)
 
-[![License](https://img.shields.io/badge/License-Public--Domain-blue.svg)](https://github.com/loc-rdc/artifactory-plugin/blob/master/LICENSE.txt)
+## License
+[![cc0](http://i.creativecommons.org/p/zero/1.0/88x31.png)](http://creativecommons.org/publicdomain/zero/1.0/)
+
+Note: By contributing to this project, you agree to license your work under the
+same terms as those that govern this project's distribution.
 
 ## Adding to your build script
 see https://plugins.gradle.org/plugin/gov.loc.repository.artifactory
 
-##Example use in gradle build script
+## Example use in gradle build script
 ``` groovy
 artifactory{
   folder "foo"
