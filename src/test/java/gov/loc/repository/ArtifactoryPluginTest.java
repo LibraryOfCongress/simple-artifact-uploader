@@ -12,7 +12,7 @@ public class ArtifactoryPluginTest extends Assert {
   @Test
   public void testApplyByClass(){
     Project project = ProjectBuilder.builder().build();
-    project.getPluginManager().apply(ArtifactoryPlugin.class);
+    project.getPluginManager().apply(SimpleArtifactUploaderPlugin.class);
     
     assertTrue(project.getTasks().getByName("upload") instanceof UploadTask);
   }

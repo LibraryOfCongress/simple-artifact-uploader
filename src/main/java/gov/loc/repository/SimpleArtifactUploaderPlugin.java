@@ -9,7 +9,7 @@ import gov.loc.repository.task.UploadTask;
 /**
  * The class that extends gradle by adding the artifactory closure and the upload task
  */
-public class ArtifactoryPlugin implements Plugin<Project>{
+public class SimpleArtifactUploaderPlugin implements Plugin<Project>{
   @Override
   public void apply(Project project) {
     project.getExtensions().create("artifactory", UploadPluginExtension.class); //define the artifactory closure

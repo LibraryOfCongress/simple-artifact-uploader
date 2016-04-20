@@ -18,7 +18,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import gov.loc.repository.ArtifactoryPlugin;
+import gov.loc.repository.SimpleArtifactUploaderPlugin;
 import gov.loc.repository.domain.ArtifactHashes;
 
 public class UploadTaskTest extends Assert {
@@ -29,7 +29,7 @@ public class UploadTaskTest extends Assert {
   @Before
   public void setup(){
     project = ProjectBuilder.builder().build();
-    project.getPluginManager().apply(ArtifactoryPlugin.class);
+    project.getPluginManager().apply(SimpleArtifactUploaderPlugin.class);
     project.getPluginManager().apply("java");
     
     sut = (UploadTask) project.getTasks().getByName("upload");

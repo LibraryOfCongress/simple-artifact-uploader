@@ -30,14 +30,14 @@ dependencies {
 
 pluginBundle {
   website = 'https://github.com/libraryofcongress'
-  vcsUrl = 'https://github.com/libraryofcongress/artifactory-plugin'
+  vcsUrl = 'https://github.com/libraryofcongress/simple-artifact-uploader'
   description = 'Upload artifacts to artifactory using its rest api instead of the provided plugin. '
   tags = ['artifactory', 'upload', 'rest-api']
 
   plugins {
     artifactory {
-      id = 'gov.loc.repository.artifactory'
-      displayName = 'Simple Artifactory plugin'
+      id = 'gov.loc.repository.simple-artifact-uploader'
+      displayName = 'Simple artifact uploader'
     }
   }
 }
