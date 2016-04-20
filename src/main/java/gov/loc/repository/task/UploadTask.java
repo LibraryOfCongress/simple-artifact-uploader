@@ -40,7 +40,7 @@ import gov.loc.repository.extension.UploadPluginExtension;
 import gov.loc.repository.hash.Hasher;
 
 /**
- * The class that actually does the uploading
+ * The class that actually does the uploading to artifactory
  */
 public class UploadTask extends DefaultTask{
   private static final Logger logger = Logging.getLogger(UploadTask.class);

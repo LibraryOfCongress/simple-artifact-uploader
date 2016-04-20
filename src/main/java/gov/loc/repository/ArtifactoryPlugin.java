@@ -6,6 +6,9 @@ import org.gradle.api.Project;
 import gov.loc.repository.extension.UploadPluginExtension;
 import gov.loc.repository.task.UploadTask;
 
+/**
+ * The class that extends gradle by adding the artifactory closure and the upload task
+ */
 public class ArtifactoryPlugin implements Plugin<Project>{
   @Override
   public void apply(Project project) {

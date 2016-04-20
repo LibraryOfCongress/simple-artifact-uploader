@@ -2,6 +2,9 @@ package gov.loc.repository.domain;
 
 import java.util.Objects;
 
+/**
+ * Data class for storing the MD5 and SHA1 checksum of an artifact
+ */
 public class ArtifactHashes {
   final public String sha1;
   final public String md5;
