@@ -81,7 +81,7 @@ public class UploadTask extends DefaultTask{
     }
   }
   
-  private ArtifactHashes calculateHashes(File artifact) throws NoSuchAlgorithmException, IOException{
+  protected ArtifactHashes calculateHashes(File artifact) throws NoSuchAlgorithmException, IOException{
     logger.debug("Calulating hash for {}", artifact);
     
     MessageDigest md5MessageDigest = MessageDigest.getInstance("MD5");
@@ -96,12 +96,12 @@ public class UploadTask extends DefaultTask{
     return new ArtifactHashes(sha1, md5);
   }
 
-  private String calculateHash(File file, MessageDigest messageDigest) throws IOException{
+  protected String calculateHash(File file, MessageDigest messageDigest) throws IOException{
     InputStream stream = Files.newInputStream(Paths.get(file.toURI()), StandardOpenOption.READ);
     return Hasher.hash(stream, messageDigest);
   }
 
-  private boolean hashesDiffer(ArtifactHashes calculatedHashes, String repo, String folder, String artifactName, String artifactoryUrl) throws ClientProtocolException, IOException{
+  protected boolean hashesDiffer(ArtifactHashes calculatedHashes, String repo, String folder, String artifactName, String artifactoryUrl) throws ClientProtocolException, IOException{
     logger.debug("Seeing if our calculated hash is different than the last uploaded artifact");
     StringBuilder url = new StringBuilder();
     url.append(artifactoryUrl).append("/").append(API).append("/").append(repo).append("/").append(folder).append("/").append(artifactName);
@@ -119,7 +119,7 @@ public class UploadTask extends DefaultTask{
     return !Objects.equals(artifactoryHashes.sha1, calculatedHashes.sha1) || !Objects.equals(artifactoryHashes.md5, calculatedHashes.md5);
   }
 
-  private ArtifactHashes getHashes(HttpResponse response) throws ParseException, IOException{
+  protected ArtifactHashes getHashes(HttpResponse response) throws ParseException, IOException{
     logger.debug("Getting MD5 and SHA1 hashes from response");
     String json = EntityUtils.toString(response.getEntity());
     JsonObject jsonObject = new JsonParser().parse(json).getAsJsonObject();
@@ -130,7 +130,7 @@ public class UploadTask extends DefaultTask{
     return new ArtifactHashes(sha1, md5);
   }
   
-  private void upload(UploadPluginExtension ext, File artifact) throws ClientProtocolException, IOException{
+  protected void upload(UploadPluginExtension ext, File artifact) throws ClientProtocolException, IOException{
     HttpEntity entity = MultipartEntityBuilder.create().addBinaryBody(artifact.getName(), artifact, ContentType.create("application/octet-stream"), artifact.getName()).build();
     
     StringBuilder url = new StringBuilder();
