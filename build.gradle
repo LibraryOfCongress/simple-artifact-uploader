@@ -42,12 +42,6 @@ pluginBundle {
   }
 }
 
-project.dependencies {
-  compile 'org.apache.httpcomponents:httpclient:4.5.1',
-  'org.apache.httpcomponents:httpmime:4.5.1',
-  'com.google.code.gson:gson:2.5'
-}
-
 jacoco {
   toolVersion = "0.7.5.201505241946" //needed for jenkins to report code coverage correctly
 }
