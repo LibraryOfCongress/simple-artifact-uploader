@@ -8,6 +8,7 @@ import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.tasks.bundling.AbstractArchiveTask;
+import org.gradle.model.Defaults;
 import org.gradle.model.Model;
 import org.gradle.model.ModelMap;
 import org.gradle.model.Mutate;
@@ -27,6 +28,15 @@ public class SimpleArtifactUploaderPlugin implements Plugin<Project>{
   }
   
   static class Rules extends RuleSource {
+    @Defaults
+    void setupArtifactoryDefaults(Artifactory artifactory){
+      artifactory.setUsername("");
+      artifactory.setPassword("");
+      artifactory.setRepository("libs-release-local");
+      artifactory.setFolder("");
+      artifactory.setUrl("http://artifactory");
+    }
+    
     @SuppressWarnings("unused")
     @Model 
     void artifactory(Artifactory artifactory) {}
