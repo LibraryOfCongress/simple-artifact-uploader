@@ -39,10 +39,9 @@ import com.google.gson.JsonParser;
 import gov.loc.repository.domain.ArtifactHashes;
 import gov.loc.repository.hash.Hasher;
 import gov.loc.repository.model.Artifactory;
-import gov.loc.repository.task.UploadTask;
 
 public class UploadAction implements Action<Task>{
-  private static final Logger logger = Logging.getLogger(UploadTask.class);
+  private static final Logger logger = Logging.getLogger(UploadAction.class);
   private static final String API = "api/storage";
   private static final int TIMEOUT_IN_SECONDS = 30;
   private static final int TIMEOUT_IN_MILLISECONDS = TIMEOUT_IN_SECONDS * 1000;

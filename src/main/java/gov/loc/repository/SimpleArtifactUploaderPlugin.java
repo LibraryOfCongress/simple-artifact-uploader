@@ -23,8 +23,6 @@ import gov.loc.repository.model.Artifactory;
 public class SimpleArtifactUploaderPlugin implements Plugin<Project>{
   @Override
   public void apply(Project project) {
-//    project.getExtensions().create("artifactory", UploadPluginExtension.class); //define the artifactory closure
-//    project.getTasks().create("upload", UploadTask.class); //define the upload task
   }
   
   static class Rules extends RuleSource {
