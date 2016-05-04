@@ -22,6 +22,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.BasicCredentialsProvider;
@@ -40,7 +41,10 @@ import gov.loc.repository.domain.ArtifactHashes;
 import gov.loc.repository.hash.Hasher;
 import gov.loc.repository.model.Artifactory;
 
-public class UploadAction implements Action<Task>{
+/**
+ * The action of the upload task. Does the actual uploading to artifactory
+ */
+final public class UploadAction implements Action<Task>{
   private static final Logger logger = Logging.getLogger(UploadAction.class);
   private static final String API = "api/storage";
   private static final int TIMEOUT_IN_SECONDS = 30;
@@ -63,7 +67,7 @@ public class UploadAction implements Action<Task>{
   }
   
   @Override
-  public void execute(Task arg0) {
+  public void execute(Task task) {
     uploadArtifacts();
   }
 
@@ -78,12 +82,15 @@ public class UploadAction implements Action<Task>{
           logger.quiet("Skipping upload since checksums match for {}", artifact);
         }
       }
-      catch(IOException | NoSuchAlgorithmException e){
-        
+      catch(ConnectTimeoutException e){
+        throw new GradleException("Failed to upload artifact due to connection timeout", e);
       }
-//      catch(Exception e){
-//        throw new GradleException("Failed to upload artifact " + artifact, e);
-//      }
+      catch(NoSuchAlgorithmException e){
+        throw new GradleException("Unable to hash artifact to be uploaded.", e);
+      }
+      catch(IOException e){
+        throw new GradleException("Problem reading " + artifact, e);
+      }
     }
   }
   
@@ -132,6 +139,7 @@ public class UploadAction implements Action<Task>{
     JsonObject checkSums = jsonObject.getAsJsonObject("checksums");
     String sha1 = checkSums.get("sha1").getAsString();
     String md5 = checkSums.get("md5").getAsString();
+    logger.debug("MD5 is: [{}], and SHA1 is: [{}]", md5, sha1);
     
     return new ArtifactHashes(sha1, md5);
   }
@@ -141,7 +149,8 @@ public class UploadAction implements Action<Task>{
     
     StringBuilder url = new StringBuilder();
     url.append(config.getUrl()).append("/").append(config.getRepository()).append("/").append(config.getFolder()).append("/").append(artifact.getName());
-    logger.debug("Uploading {} to {}", artifact.getName(), url.toString());
+    logger.debug("Uploading {} to {} with username {} and password {}", 
+        artifact.getName(), url.toString(), config.getUsername(), config.getPassword());
     
     credentialsProvider.setCredentials(
         new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),

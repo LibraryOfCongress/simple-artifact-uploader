@@ -11,21 +11,22 @@ repositories {
   jcenter()
 }
 
-version = "1.1"
+version = "2.0"
 group = "gov.loc.repository"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
-  compile 'org.slf4j:slf4j-api:1.7.18',
-  'org.apache.httpcomponents:httpclient:4.5.1',
-  'org.apache.httpcomponents:httpmime:4.5.1',
-  'com.google.code.gson:gson:2.5',
+  compile 'org.slf4j:slf4j-api:latest.integration',
+  'org.apache.httpcomponents:httpclient:latest.integration',
+  'org.apache.httpcomponents:httpmime:latest.integration',
+  'com.google.code.gson:gson:latest.integration',
   gradleApi()
 
-  testCompile 'junit:junit:4.12', 
-  'org.mockito:mockito-core:1.10.19'
+  testCompile 'junit:junit:latest.integration', 
+  'org.mockito:mockito-core:latest.integration'
+  testCompile gradleTestKit()
 }
 
 pluginBundle {
@@ -40,10 +41,6 @@ pluginBundle {
       displayName = 'Simple artifact uploader'
     }
   }
-}
-
-jacoco {
-  toolVersion = "0.7.5.201505241946" //needed for jenkins to report code coverage correctly
 }
 
 findbugsTest.enabled = false

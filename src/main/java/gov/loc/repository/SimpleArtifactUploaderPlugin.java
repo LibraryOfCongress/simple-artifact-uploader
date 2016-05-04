@@ -18,7 +18,7 @@ import gov.loc.repository.actions.UploadAction;
 import gov.loc.repository.model.Artifactory;
 
 /**
- * The class that extends gradle by adding the artifactory closure and the upload task
+ * The class that extends gradle by adding the artifactory model, defaults, and the upload task
  */
 public class SimpleArtifactUploaderPlugin implements Plugin<Project>{
   @Override
@@ -26,6 +26,11 @@ public class SimpleArtifactUploaderPlugin implements Plugin<Project>{
   }
   
   static class Rules extends RuleSource {
+    
+    /**
+     * Creates the default values for the artifactory model
+     * @param artifactory the artifactory model to be modified
+     */
     @Defaults
     void setupArtifactoryDefaults(Artifactory artifactory){
       artifactory.setUsername("");
@@ -35,10 +40,18 @@ public class SimpleArtifactUploaderPlugin implements Plugin<Project>{
       artifactory.setUrl("http://artifactory");
     }
     
-    @SuppressWarnings("unused")
+    /**
+     * model 
+     * @param artifactory the artifactory model
+     */
     @Model 
     void artifactory(Artifactory artifactory) {}
     
+    /**
+     * Creates the upload tasks
+     * @param tasks all the tasks in the gradle model
+     * @param artifactoryConfig the artifactory config from the model
+     */
     @Mutate
     public void createUploadTask(ModelMap<Task> tasks, Artifactory artifactoryConfig){
       tasks.create("uploadToArtifactory");
