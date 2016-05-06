@@ -26,7 +26,8 @@ dependencies {
   gradleApi()
 
   testCompile 'junit:junit:latest.integration', 
-  'org.mockito:mockito-core:latest.integration'
+  'org.mockito:mockito-core:latest.integration',
+  gradleTestKit()
 }
 
 pluginBundle {
