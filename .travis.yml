@@ -7,7 +7,7 @@ before_script: #ensure that it uses the latest version of gradle
   - sudo apt-get -y install gradle-ppa
 install: /bin/true #skip having travis-ci trying to run assemble
 script: 
-  - "gradle --version"
+  - "/usr/bin/gradle --version"
   - "/usr/bin/gradle clean check"
 after_success: "gradle coveralls"
 before_cache:
