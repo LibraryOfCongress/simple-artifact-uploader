@@ -1,50 +1,53 @@
-package gov.loc.repository.task;
+package gov.loc.repository.actions;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
-import org.gradle.api.Project;
-import org.gradle.api.file.FileCollection;
-import org.gradle.testfixtures.ProjectBuilder;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.mockito.Mockito;
 
-import gov.loc.repository.SimpleArtifactUploaderPlugin;
 import gov.loc.repository.domain.ArtifactHashes;
+import gov.loc.repository.model.Artifactory;
 
-public class UploadTaskTest extends Assert {
-  private UploadTask sut;
-  private Project project;
+public class UploadActionTest extends Assert {
+  @Rule
+  public final TemporaryFolder folder = new TemporaryFolder();
+  
+  private UploadAction sut;
   private HttpClient mockClient;
+  private Artifactory mockConfig;
   
   @Before
-  public void setup(){
-    project = ProjectBuilder.builder().build();
-    project.getPluginManager().apply(SimpleArtifactUploaderPlugin.class);
-    project.getPluginManager().apply("java");
-    
-    sut = (UploadTask) project.getTasks().getByName("upload");
+  public void setup() throws IOException{
     mockClient = Mockito.mock(HttpClient.class);
+    mockConfig = Mockito.mock(Artifactory.class);
+    
+    Set<File> artifacts = new HashSet<>();
+    File artifact = folder.newFile();
+    artifact.createNewFile();
+    artifacts.add(artifact);
+    
+    sut = new UploadAction(mockConfig, artifacts);
     sut.setClient(mockClient);
   }
   
   @Test
-  public void testUploadArtifacts() throws IOException{
-    FileCollection artifacts = project.getConfigurations().getByName("archives").getAllArtifacts().getFiles();
-    for(File artifact : artifacts){
-      artifact.getParentFile().mkdirs();
-      artifact.createNewFile();
-    }
-    
+  public void testExecute() throws Exception{
+    Mockito.when(mockConfig.getUsername()).thenReturn("");
+    Mockito.when(mockConfig.getPassword()).thenReturn("");
     HttpResponse mockResponse = Mockito.mock(HttpResponse.class);
     Mockito.when(mockClient.execute(Mockito.any())).thenReturn(mockResponse);
     StatusLine mockStatusLine = Mockito.mock(StatusLine.class);
@@ -52,7 +55,7 @@ public class UploadTaskTest extends Assert {
     Mockito.when(mockStatusLine.getStatusCode()).thenReturn(400); //the artifact doesn't already exist
     Mockito.when(mockStatusLine.getStatusCode()).thenReturn(201); //upload was successful
     
-    sut.uploadArtifacts(); 
+    sut.execute(null);
   }
   
   @Test
