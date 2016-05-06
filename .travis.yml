@@ -8,8 +8,13 @@ before_script: #ensure that it uses the latest version of gradle
 install: /bin/true #skip having travis-ci trying to run assemble
 script: 
   - "gradle --version"
-  - "gradle clean check"
+  - "/usr/bin/gradle clean check"
 after_success: "gradle coveralls"
+before_cache:
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+cache:
+  directories:
+    - $HOME/.gradle/caches/
 env:
   global:
     - secure: "Cicz/w+4QPOehmTc5lX/FnRfCUw6nDloGc3GmXYVZ//Bck8dfGnbVMnAjD1VowMBLPeGkto/anzPbWJxYxjciFF9kQ3sJS2CgU8g2Qyy1BUk3u6dOlqhiooMpXyoXCguP6oEDhfxXAmQsQLdKzVvkUkbo8Va43i5SQuFMgIeeU72ZsIoFRzqCLp+LHZigAXqV/Yqw8LfNiWDwaF7KBzayW5J5Dyv6SQKJ54zMoCYcflc9Rk07xffcOiyJ/TEk2cD4M0h31n0hN7/eJ2uGkP2vUVxyYtH1Uvp8WFbBMVZ7SldCP4IJm1r4Z0+hvGOaaoWj1Vk9fhtuYJ1Z5HjHAuJg4nHuUKr35IxnKBe81qc6SH8uRbW92qFnUAhcYWEs1dPQB3NNOGa4bXK51NVlXzbO6IVn8h0/2Txj4pRxa0gnvEoElSPh3NxeH3AlsHONWPOmx+n2Iwl2YjUSC2tNNOlwuoxxw1CzZ4TExDgT1JzlvfPZwwU9pbBKxCeJHW2+OWtyt2QpeFAkLJE7dxEDOxKuddrg02tFwryjRwAdIkl8G+NaoLJdicVoaHIQO2azqtdY4K/0DPHm8A3AijLewGpYD/cuYitn9icARsKeBuGXR/v5zhW1P3ufcCj6erQpIW2kSfwkq1eehu53TFEOlGdobU+AYe3hOUztVlniEz7Cdk="
