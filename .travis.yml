@@ -2,7 +2,9 @@ jdk:
   - oraclejdk8
 language: java
 install: /bin/true #skip having travis-ci trying to run assemble
-script: "gradle clean check"
+script: 
+  - "gradle --version"
+  - "gradle clean check"
 after_success: "gradle coveralls"
 env:
   global:
