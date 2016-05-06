@@ -1,6 +1,8 @@
 # artifactory-plugin
 The plugin providied by artifactory involves a lot of configuration. This plugin was created to simplify uploading gradle built artifacts to artifactory. It uses artifactory's rest api to do the actual work.
 
+[![Master Branch Build Status](https://travis-ci.org/LibraryOfCongress/simple-artifact-uploader.svg?branch=master)](https://travis-ci.org/LibraryOfCongress/simple-artifact-uploader)
+
 ## License
 [![cc0](http://i.creativecommons.org/p/zero/1.0/88x31.png)](http://creativecommons.org/publicdomain/zero/1.0/)
 
