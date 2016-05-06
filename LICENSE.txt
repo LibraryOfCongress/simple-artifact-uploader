@@ -1,4 +1,4 @@
-License for artifactory-plugin
+License for simple-artifact-uploader
 -------------------------------
 This software is a work of the United States Government and is not subject 
 to copyright protection in the United States. 
