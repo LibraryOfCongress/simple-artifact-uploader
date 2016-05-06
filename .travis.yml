@@ -1,6 +1,10 @@
 jdk:
   - oraclejdk8
 language: java
+before_script: #ensure that it uses the latest version of gradle
+  - sudo add-apt-repository ppa:cwchien/gradle
+  - sudo apt-get update
+  - sudo apt-get install gradle-ppa
 install: /bin/true #skip having travis-ci trying to run assemble
 script: 
   - "gradle --version"
