@@ -22,12 +22,12 @@ dependencies {
   compile 'org.slf4j:slf4j-api:latest.integration',
   'org.apache.httpcomponents:httpclient:latest.integration',
   'org.apache.httpcomponents:httpmime:latest.integration',
-  'com.google.code.gson:gson:latest.integration',
-  gradleApi()
+  'com.google.code.gson:gson:latest.integration'
+  compile gradleApi()
 
   testCompile 'junit:junit:latest.integration', 
-  'org.mockito:mockito-core:latest.integration',
-  gradleTestKit()
+  'org.mockito:mockito-core:latest.integration'
+  testCompile gradleTestKit()
 }
 
 pluginBundle {
