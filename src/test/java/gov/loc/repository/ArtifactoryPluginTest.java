@@ -14,7 +14,7 @@ public class ArtifactoryPluginTest extends Assert {
     Project project = ProjectBuilder.builder().build();
     project.getPluginManager().apply(SimpleArtifactUploaderPlugin.class);
     
-    assertTrue(project.getTasks().getByName("upload") instanceof UploadTask);
+    assertTrue(project.getTasks().getByName("uploadToArtifactory") instanceof UploadTask);
   }
   
   @Test
@@ -22,6 +22,6 @@ public class ArtifactoryPluginTest extends Assert {
     Project project = ProjectBuilder.builder().build();
     project.getPlugins().apply("gov.loc.repository.simple-artifact-uploader");
 
-    assertTrue(project.getTasks().getByName("upload") instanceof UploadTask);
+    assertTrue(project.getTasks().getByName("uploadToArtifactory") instanceof UploadTask);
   }
 }

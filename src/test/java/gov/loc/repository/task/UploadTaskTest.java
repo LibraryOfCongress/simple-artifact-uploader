@@ -32,7 +32,7 @@ public class UploadTaskTest extends Assert {
     project.getPluginManager().apply(SimpleArtifactUploaderPlugin.class);
     project.getPluginManager().apply("java");
     
-    sut = (UploadTask) project.getTasks().getByName("upload");
+    sut = (UploadTask) project.getTasks().getByName("uploadToArtifactory");
     mockClient = Mockito.mock(HttpClient.class);
     sut.setClient(mockClient);
   }
