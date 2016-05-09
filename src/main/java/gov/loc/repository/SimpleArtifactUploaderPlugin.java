@@ -12,7 +12,8 @@ import gov.loc.repository.task.UploadTask;
 public class SimpleArtifactUploaderPlugin implements Plugin<Project>{
   @Override
   public void apply(Project project) {
-    project.getExtensions().create("artifactory", UploadPluginExtension.class); //define the artifactory closure
+    UploadPluginExtension extension = project.getExtensions().create("artifactory", UploadPluginExtension.class); //define the artifactory closure
+    extension.setFolder(project.getGroup() + "/" + project.getName() + "/" + project.getVersion());
     project.getTasks().create("upload", UploadTask.class); //define the upload task
   }
 }
