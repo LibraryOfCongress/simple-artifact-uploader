@@ -1,4 +1,4 @@
-# artifactory-plugin
+# Simple Artifact Uploader
 The plugin providied by artifactory involves a lot of configuration. This plugin was created to simplify uploading gradle built artifacts to artifactory. It uses artifactory's rest api to do the actual work.
 
 [![Master Branch Build Status](https://travis-ci.org/LibraryOfCongress/simple-artifact-uploader.svg?branch=master)](https://travis-ci.org/LibraryOfCongress/simple-artifact-uploader)
@@ -9,8 +9,7 @@ The plugin providied by artifactory involves a lot of configuration. This plugin
 Note: By contributing to this project, you agree to license your work under the
 same terms as those that govern this project's distribution.
 
-## Adding to your build script
-see https://plugins.gradle.org/plugin/gov.loc.repository.artifactory
+## Install
 ```
 buildscript {
   repositories {
@@ -32,7 +31,8 @@ plugins {
 }
 ```
 
-## Example use in gradle build script
+## Usage
+### Configuring the plugin
 ``` groovy
 artifactory{
   folder "foo"
@@ -42,9 +42,7 @@ artifactory{
   password = "${artifactory_password}" //password of the user. Property should be located in your private gradle properties file 
 }
 ```
-for more information about where to put your gradle.properties file see [here](https://docs.gradle.org/current/userguide/build_environment.html#sec:gradle_configuration_properties)
-
-##Adding more artifacts to be uploaded
+### Adding more artifacts to be uploaded
 ``` groovy
 task myJar(type: Jar)
 
@@ -52,3 +50,21 @@ artifacts {
     archives myJar //register the output of the myJar task as an artifact. All registered artifacts are automatically uploaded.
 }
 ```
+
+## Help
+* For more information about where to put your gradle.properties file see [here](https://docs.gradle.org/current/userguide/build_environment.html#sec:gradle_configuration_properties)
+
+## Development
+* Version number
+  * 1.X is for development using the current gradle model
+  * 2.X is for development using the new [gradle model and rules](https://docs.gradle.org/2.13/userguide/pt06.html)
+* Master branch will be used for publishing to plugins.gradle.org
+
+## Contribute
+Please send us your pull requests! See the [roadmap](#roadmap) or issues for areas where you can help us improve
+
+## Roadmap
+- [ ] extend config for controlling other aspects of the rest api requests (timeout, number of tries, etc)
+- [ ] extend config to controll which folder individual artifacts are uploaded to
+- [ ] extend config to allow upload to multiple artifactory servers
+- [ ] upload artifact with pregenerated checksums instead of having artifactory do it later (causes checksum check to always fail. See [issue #3](https://github.com/LibraryOfCongress/simple-artifact-uploader/issues/3) ) 
