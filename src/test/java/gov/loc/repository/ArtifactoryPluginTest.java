@@ -20,7 +20,7 @@ public class ArtifactoryPluginTest extends Assert {
   @Test
   public void testApplyByName(){
     Project project = ProjectBuilder.builder().build();
-    project.getPlugins().apply("gov.loc.repository.artifactory");
+    project.getPlugins().apply("gov.loc.repository.simple-artifact-uploader");
 
     assertTrue(project.getTasks().getByName("upload") instanceof UploadTask);
   }
