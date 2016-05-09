@@ -14,6 +14,6 @@ public class SimpleArtifactUploaderPlugin implements Plugin<Project>{
   public void apply(Project project) {
     UploadPluginExtension extension = project.getExtensions().create("artifactory", UploadPluginExtension.class); //define the artifactory closure
     extension.setFolder(project.getGroup() + "/" + project.getName() + "/" + project.getVersion());
-    project.getTasks().create("upload", UploadTask.class); //define the upload task
+    project.getTasks().create("uploadToArtifactory", UploadTask.class); //define the upload task
   }
 }
