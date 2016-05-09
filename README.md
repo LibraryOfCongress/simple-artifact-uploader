@@ -10,6 +10,7 @@ Note: By contributing to this project, you agree to license your work under the
 same terms as those that govern this project's distribution.
 
 ## Install
+### For all versions of gradle
 ```
 buildscript {
   repositories {
@@ -24,7 +25,7 @@ buildscript {
 
 apply plugin: "gov.loc.repository.simple-artifact-uploader"
 ```
-or if you are using gradle version 2.1 or newer
+### Syntax introduced in gradle version 2.1
 ```
 plugins {
   id "gov.loc.repository.simple-artifact-uploader" version "1.0"
