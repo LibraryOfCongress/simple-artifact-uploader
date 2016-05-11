@@ -10,6 +10,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.gradle.api.Project;
 import org.gradle.api.file.FileCollection;
 import org.gradle.testfixtures.ProjectBuilder;
@@ -46,7 +47,7 @@ public class UploadTaskTest extends Assert {
     }
     
     HttpResponse mockResponse = Mockito.mock(HttpResponse.class);
-    Mockito.when(mockClient.execute(Mockito.any())).thenReturn(mockResponse);
+    Mockito.when(mockClient.execute(Mockito.any(HttpRequestBase.class))).thenReturn(mockResponse);
     StatusLine mockStatusLine = Mockito.mock(StatusLine.class);
     Mockito.when(mockResponse.getStatusLine()).thenReturn(mockStatusLine);
     Mockito.when(mockStatusLine.getStatusCode()).thenReturn(400); //the artifact doesn't already exist
