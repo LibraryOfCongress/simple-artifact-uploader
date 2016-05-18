@@ -6,10 +6,10 @@ import java.util.Objects;
  * Data class for storing the MD5 and SHA1 checksum of an artifact
  */
 public class ArtifactHashes {
-  final public String sha1;
-  final public String md5;
+  final public transient String sha1;
+  final public transient String md5;
   
-  public ArtifactHashes(String sha1, String md5){
+  public ArtifactHashes(final String sha1, final String md5){
     this.sha1 = sha1;
     this.md5 = md5;
   }
@@ -20,7 +20,7 @@ public class ArtifactHashes {
   }
 
   @Override
-  public boolean equals(Object obj) {
+  public boolean equals(final Object obj) {
     if (this == obj){
       return true;
     }
@@ -30,7 +30,7 @@ public class ArtifactHashes {
     if (!(obj instanceof ArtifactHashes)){
       return false;
     }
-    ArtifactHashes other = (ArtifactHashes) obj;
+    final ArtifactHashes other = (ArtifactHashes) obj;
     return Objects.equals(sha1, other.sha1) && Objects.equals(md5, other.md5);
   }
   

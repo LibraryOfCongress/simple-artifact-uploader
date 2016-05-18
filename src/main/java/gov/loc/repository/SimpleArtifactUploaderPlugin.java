@@ -17,14 +17,14 @@ public class SimpleArtifactUploaderPlugin implements Plugin<Project>{
   private static final Logger logger = Logging.getLogger(SimpleArtifactUploaderPlugin.class);
   
   @Override
-  public void apply(Project project) {
-    UploadPluginExtension extension = project.getExtensions().create("artifactory", UploadPluginExtension.class); //define the artifactory closure
+  public void apply(final Project project) {
+    final UploadPluginExtension extension = project.getExtensions().create("artifactory", UploadPluginExtension.class); //define the artifactory closure
     extension.setFolder(project.getGroup() + "/" + project.getName() + "/" + project.getVersion());
     
-    UploadTask upload = project.getTasks().create("uploadToArtifactory", UploadTask.class); //define the upload task
+    final UploadTask upload = project.getTasks().create("uploadToArtifactory", UploadTask.class); //define the upload task
     
     //make sure tasks that generate artifacts happen first
-    for(Task task : project.getTasks()){
+    for(final Task task : project.getTasks()){
       if(task instanceof AbstractArchiveTask){
         logger.debug("Adding dependsOn {} for uploadToArtifactory", task.getName());
         upload.dependsOn(task);

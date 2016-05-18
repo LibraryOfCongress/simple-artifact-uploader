@@ -45,8 +45,8 @@ import gov.loc.repository.hash.Hasher;
 public class UploadTask extends DefaultTask{
   private static final Logger logger = Logging.getLogger(UploadTask.class);
   private static final String API = "api/storage";
-  private HttpClient client;
-  private final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+  private transient HttpClient client;
+  private transient final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
   
   public UploadTask(){
     this.setDescription("If a project generates an artifact, upload it to artifactory");
@@ -63,11 +63,11 @@ public class UploadTask extends DefaultTask{
         extension = new UploadPluginExtension();
     }
     
-    FileCollection artifacts = getProject().getConfigurations().getByName("archives").getAllArtifacts().getFiles();
+    final FileCollection artifacts = getProject().getConfigurations().getByName("archives").getAllArtifacts().getFiles();
     
-    for(File artifact : artifacts){
+    for(final File artifact : artifacts){
       try{
-        ArtifactHashes hashes = calculateHashes(artifact);
+        final ArtifactHashes hashes = calculateHashes(artifact);
         if(hashesDiffer(hashes, extension.getRepository(), extension.getFolder(), artifact.getName(), extension.getUrl())){
           upload(extension, artifact);
         }
@@ -75,76 +75,76 @@ public class UploadTask extends DefaultTask{
           logger.quiet("Skipping upload since checksums match for {}", artifact);
         }
       }
-      catch(Exception e){
+      catch(IOException | NoSuchAlgorithmException e){
         throw new GradleException("Failed to upload artifact " + artifact, e);
       }
     }
   }
   
-  protected ArtifactHashes calculateHashes(File artifact) throws NoSuchAlgorithmException, IOException{
+  protected ArtifactHashes calculateHashes(final File artifact) throws NoSuchAlgorithmException, IOException{
     logger.debug("Calulating hash for {}", artifact);
     
-    MessageDigest md5MessageDigest = MessageDigest.getInstance("MD5");
-    MessageDigest sha1MessageDigest = MessageDigest.getInstance("SHA1");
+    final MessageDigest md5MessageDigest = MessageDigest.getInstance("MD5");
+    final MessageDigest sha1MessageDigest = MessageDigest.getInstance("SHA1");
     
-    String md5 = calculateHash(artifact, md5MessageDigest);
+    final String md5 = calculateHash(artifact, md5MessageDigest);
     logger.debug("MD5 hash for {} is {}", artifact, md5);
     
-    String sha1 = calculateHash(artifact, sha1MessageDigest);
+    final String sha1 = calculateHash(artifact, sha1MessageDigest);
     logger.debug("SHA1 hash for {} is {}", artifact, sha1);
     
     return new ArtifactHashes(sha1, md5);
   }
 
-  protected String calculateHash(File file, MessageDigest messageDigest) throws IOException{
-    InputStream stream = Files.newInputStream(Paths.get(file.toURI()), StandardOpenOption.READ);
+  protected String calculateHash(final File file, final MessageDigest messageDigest) throws IOException{
+    final InputStream stream = Files.newInputStream(Paths.get(file.toURI()), StandardOpenOption.READ);
     return Hasher.hash(stream, messageDigest);
   }
 
-  protected boolean hashesDiffer(ArtifactHashes calculatedHashes, String repo, String folder, String artifactName, String artifactoryUrl) throws ClientProtocolException, IOException{
+  protected boolean hashesDiffer(final ArtifactHashes calculatedHashes, final String repo, final String folder, final String artifactName, final String artifactoryUrl) throws ClientProtocolException, IOException{
     logger.debug("Seeing if our calculated hash is different than the last uploaded artifact");
-    StringBuilder url = new StringBuilder();
-    url.append(artifactoryUrl).append("/").append(API).append("/").append(repo).append("/").append(folder).append("/").append(artifactName);
+    final StringBuilder url = new StringBuilder();
+    url.append(artifactoryUrl).append('/').append(API).append('/').append(repo).append('/').append(folder).append('/').append(artifactName);
     
-    HttpGet request = new HttpGet(url.toString());
-    HttpResponse response = client.execute(request);
+    final HttpGet request = new HttpGet(url.toString());
+    final HttpResponse response = client.execute(request);
     
     if(response.getStatusLine().getStatusCode() != 200){
       logger.debug("got {} so assuming that artifact doesn't exist, so of course it differs", response);
       return true;
     }
     
-    ArtifactHashes artifactoryHashes = getHashes(response);
+    final ArtifactHashes artifactoryHashes = getHashes(response);
     
     return !Objects.equals(artifactoryHashes.sha1, calculatedHashes.sha1) || !Objects.equals(artifactoryHashes.md5, calculatedHashes.md5);
   }
 
-  protected ArtifactHashes getHashes(HttpResponse response) throws ParseException, IOException{
+  protected ArtifactHashes getHashes(final HttpResponse response) throws ParseException, IOException{
     logger.debug("Getting MD5 and SHA1 hashes from response");
-    String json = EntityUtils.toString(response.getEntity());
-    JsonObject jsonObject = new JsonParser().parse(json).getAsJsonObject();
-    JsonObject checkSums = jsonObject.getAsJsonObject("checksums");
-    String sha1 = checkSums.get("sha1").getAsString();
-    String md5 = checkSums.get("md5").getAsString();
+    final String json = EntityUtils.toString(response.getEntity());
+    final JsonObject jsonObject = new JsonParser().parse(json).getAsJsonObject();
+    final JsonObject checkSums = jsonObject.getAsJsonObject("checksums");
+    final String sha1 = checkSums.get("sha1").getAsString();
+    final String md5 = checkSums.get("md5").getAsString();
     
     return new ArtifactHashes(sha1, md5);
   }
   
-  protected void upload(UploadPluginExtension ext, File artifact) throws ClientProtocolException, IOException{
-    HttpEntity entity = MultipartEntityBuilder.create().addBinaryBody(artifact.getName(), artifact, ContentType.create("application/octet-stream"), artifact.getName()).build();
+  protected void upload(final UploadPluginExtension ext, final File artifact) throws ClientProtocolException, IOException{
+    final HttpEntity entity = MultipartEntityBuilder.create().addBinaryBody(artifact.getName(), artifact, ContentType.create("application/octet-stream"), artifact.getName()).build();
     
-    StringBuilder url = new StringBuilder();
-    url.append(ext.getUrl()).append("/").append(ext.getRepository()).append("/").append(ext.getFolder()).append("/").append(artifact.getName());
+    final StringBuilder url = new StringBuilder();
+    url.append(ext.getUrl()).append('/').append(ext.getRepository()).append('/').append(ext.getFolder()).append('/').append(artifact.getName());
     logger.debug("Uploading {} to {}", artifact.getName(), url.toString());
     
     credentialsProvider.setCredentials(
         new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
         new UsernamePasswordCredentials(ext.getUsername(), ext.getPassword()));
     
-    HttpPut request = new HttpPut(url.toString());
+    final HttpPut request = new HttpPut(url.toString());
     request.setEntity(entity);
 
-    HttpResponse response = client.execute(request);
+    final HttpResponse response = client.execute(request);
 
     if(response.getStatusLine().getStatusCode() != 201){
       throw new GradleException("Unable to upload artifact. Response from artifactory was " + response.getStatusLine());
@@ -158,7 +158,7 @@ public class UploadTask extends DefaultTask{
    * 
    * @param client the object actually doing the http request
    */
-  protected void setClient(HttpClient client) {
+  protected void setClient(final HttpClient client) {
     this.client = client;
   }
 }

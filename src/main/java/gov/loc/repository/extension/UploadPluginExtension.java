@@ -13,31 +13,31 @@ public class UploadPluginExtension {
   public String getFolder() {
     return folder;
   }
-  public void setFolder(String folder) {
+  public void setFolder(final String folder) {
     this.folder = folder;
   }
   public String getRepository() {
     return repository;
   }
-  public void setRepository(String repository) {
+  public void setRepository(final String repository) {
     this.repository = repository;
   }
   public String getUrl() {
     return url;
   }
-  public void setUrl(String url) {
+  public void setUrl(final String url) {
     this.url = url;
   }
   public String getUsername() {
     return username;
   }
-  public void setUsername(String username) {
+  public void setUsername(final String username) {
     this.username = username;
   }
   public String getPassword() {
     return password;
   }
-  public void setPassword(String password) {
+  public void setPassword(final String password) {
     this.password = password;
   }
 }
