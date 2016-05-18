@@ -2,6 +2,8 @@
 The plugin providied by artifactory involves a lot of configuration. This plugin was created to simplify uploading gradle built artifacts to artifactory. It uses artifactory's rest api to do the actual work.
 
 [![Master Branch Build Status](https://travis-ci.org/LibraryOfCongress/simple-artifact-uploader.svg?branch=master)](https://travis-ci.org/LibraryOfCongress/simple-artifact-uploader)
+[![Coverage Status](https://coveralls.io/repos/github/LibraryOfCongress/simple-artifact-uploader/badge.svg?branch=master)](https://coveralls.io/github/LibraryOfCongress/simple-artifact-uploader?branch=master)
+[![Gradle Plugin](https://img.shields.io/badge/gradle%20glugin-latest-brightgreen.svg)](https://plugins.gradle.org/plugin/gov.loc.repository.simple-artifact-uploader)
 
 ## License
 [![cc0](http://i.creativecommons.org/p/zero/1.0/88x31.png)](http://creativecommons.org/publicdomain/zero/1.0/)
@@ -66,6 +68,4 @@ Please send us your pull requests! See the [roadmap](#roadmap) or issues for are
 
 ## Roadmap
 - [ ] extend config for controlling other aspects of the rest api requests (timeout, number of tries, etc)
-- [ ] extend config to controll which folder individual artifacts are uploaded to
-- [ ] extend config to allow upload to multiple artifactory servers
 - [ ] upload artifact with pregenerated checksums instead of having artifactory do it later (causes checksum check to always fail. See [issue #3](https://github.com/LibraryOfCongress/simple-artifact-uploader/issues/3) ) 
