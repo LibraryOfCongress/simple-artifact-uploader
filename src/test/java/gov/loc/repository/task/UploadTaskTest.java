@@ -22,6 +22,7 @@ import org.mockito.Mockito;
 
 import gov.loc.repository.SimpleArtifactUploaderPlugin;
 import gov.loc.repository.domain.ArtifactHashes;
+import gov.loc.repository.extension.UploadPluginExtension;
 
 public class UploadTaskTest extends Assert {
   private static final String ARTIFACTORY_JSON = "{\n" + 
@@ -49,9 +50,15 @@ public class UploadTaskTest extends Assert {
   private UploadTask sut;
   private Project project;
   private HttpClient mockClient;
+  private UploadPluginExtension extension;
   
   @Before
   public void setup(){
+    extension = new UploadPluginExtension();
+    extension.setFolder("folder");
+    extension.setRepository("repository");
+    extension.setUrl("url");
+    
     project = ProjectBuilder.builder().build();
     project.getPluginManager().apply(SimpleArtifactUploaderPlugin.class);
     project.getPluginManager().apply("java");
@@ -75,7 +82,8 @@ public class UploadTaskTest extends Assert {
     Mockito.when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(ARTIFACTORY_JSON.getBytes(StandardCharsets.UTF_8)));
     
     ArtifactHashes calculatedHashes = new ArtifactHashes("sha1", "md5");
-    boolean differ = sut.hashesDiffer(calculatedHashes, "repo", "folder", "artifactName", "artifactoryUrl");
+    
+    boolean differ = sut.hashesDiffer(calculatedHashes, extension, "artifactName");
     assertTrue(differ);
   }
   
