@@ -67,15 +67,9 @@ public class UploadTask extends DefaultTask{
     
     for(final File artifact : artifacts){
       try{
-        final ArtifactHashes hashes = calculateHashes(artifact);
-        if(hashesDiffer(hashes, extension.getRepository(), extension.getFolder(), artifact.getName(), extension.getUrl())){
-          upload(extension, artifact);
-        }
-        else{
-          logger.quiet("Skipping upload since checksums match for {}", artifact);
-        }
+        upload(extension, artifact);
       }
-      catch(IOException | NoSuchAlgorithmException e){
+      catch(IOException e){
         throw new GradleException("Failed to upload artifact " + artifact, e);
       }
     }
