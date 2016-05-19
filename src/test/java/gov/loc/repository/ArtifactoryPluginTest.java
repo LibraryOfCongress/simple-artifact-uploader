@@ -24,4 +24,14 @@ public class ArtifactoryPluginTest extends Assert {
 
     assertTrue(project.getTasks().getByName("uploadToArtifactory") instanceof UploadTask);
   }
+  
+  @Test
+  public void testAutoDependsOn(){
+    Project project = ProjectBuilder.builder().build();
+    project.getPluginManager().apply("java");
+    project.getPluginManager().apply(SimpleArtifactUploaderPlugin.class);
+    
+    assertTrue("Should have at least 2 depends on, the first a file collection, and the second the jar task.", 
+        project.getTasks().getByName("uploadToArtifactory").getDependsOn().size() >= 2);
+  }
 }
