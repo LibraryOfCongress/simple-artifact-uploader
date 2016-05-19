@@ -102,17 +102,23 @@ public class UploadTask extends DefaultTask {
     logger.debug("Seeing if our calculated hash is different than the last uploaded artifact");
     final StringBuilder url = new StringBuilder();
     url.append(ext.getUrl()).append('/').append(API).append('/').append(ext.getRepository()).append('/').append(ext.getFolder()).append('/').append(artifactName);
+    logger.debug("Getting artifact information from url {}", url.toString());
 
     final HttpGet request = new HttpGet(url.toString());
     final HttpResponse response = client.execute(request);
 
     if (response.getStatusLine().getStatusCode() != 200) {
       logger.debug("got {} so assuming that artifact doesn't exist, so of course it differs", response);
+      EntityUtils.consume(response.getEntity());
       return true;
     }
 
     final ArtifactHashes artifactoryHashes = getHashes(response);
+    EntityUtils.consume(response.getEntity());
 
+    logger.debug("artifactory sha1 [{}] differs from calculated [{}] ? {}", artifactoryHashes.sha1, calculatedHashes.sha1, Objects.equals(artifactoryHashes.sha1, calculatedHashes.sha1));
+    logger.debug("artifactory md5 [{}] differs from calculated [{}] ? {}", artifactoryHashes.md5, calculatedHashes.md5, Objects.equals(artifactoryHashes.md5, calculatedHashes.md5));
+    
     return !Objects.equals(artifactoryHashes.sha1, calculatedHashes.sha1)
         || !Objects.equals(artifactoryHashes.md5, calculatedHashes.md5);
   }
@@ -145,9 +151,11 @@ public class UploadTask extends DefaultTask {
     final HttpResponse response = client.execute(request);
 
     if (response.getStatusLine().getStatusCode() != 201) {
+      EntityUtils.consume(response.getEntity());
       throw new GradleException("Unable to upload artifact. Response from artifactory was " + response.getStatusLine());
     }
 
+    EntityUtils.consume(response.getEntity());
     logger.debug("Uploaded {} successfully!", artifact.getName());
   }
 
