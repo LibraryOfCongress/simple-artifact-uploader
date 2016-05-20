@@ -57,7 +57,7 @@ public class UploadTask extends DefaultTask {
 
   @TaskAction
   public void uploadArtifacts() {
-    UploadPluginExtension extension = getProject().getExtensions().findByType(UploadPluginExtension.class);
+    final UploadPluginExtension extension = getProject().getExtensions().findByType(UploadPluginExtension.class);
     final FileCollection artifacts = getProject().getConfigurations().getByName("archives").getAllArtifacts().getFiles();
 
     for (final File artifact : artifacts) {
