@@ -69,22 +69,68 @@ public class UploadTaskTest extends Assert {
   }
   
   @Test
-  public void testHashesDiffer() throws ClientProtocolException, IOException{
+  public void testHashesDifferReturnsFalseWhenBothAreTheSame() throws ClientProtocolException, IOException{
+    ArtifactHashes artifactoryHashes = new ArtifactHashes("sha1", "md5");
+    ArtifactHashes calculatedHashes = new ArtifactHashes("sha1", "md5");
+    
+    boolean differ = sut.hashesDiffer(calculatedHashes, artifactoryHashes);
+    assertFalse(differ);
+  }
+  
+  @Test
+  public void testHashesDifferReturnsTrueWhenOnlyMD5Same() throws ClientProtocolException, IOException{
+    ArtifactHashes hash1 = new ArtifactHashes("sha1-not same", "md5");
+    ArtifactHashes hash2 = new ArtifactHashes("sha1", "md5");
+    
+    boolean differ = sut.hashesDiffer(hash1, hash2);
+    assertTrue(differ);
+    differ = sut.hashesDiffer(hash2, hash1);
+    assertTrue(differ);
+  }
+  
+  @Test
+  public void testHashesDifferReturnsTrueWhenOnlySHA1Same() throws ClientProtocolException, IOException{
+    ArtifactHashes hash1 = new ArtifactHashes("sha1", "md5-notsame");
+    ArtifactHashes hash2 = new ArtifactHashes("sha1", "md5");
+    
+    boolean differ = sut.hashesDiffer(hash1, hash2);
+    assertTrue(differ);
+    differ = sut.hashesDiffer(hash2, hash1);
+    assertTrue(differ);
+  }
+  
+  @Test
+  public void testGetHashes() throws IOException{
+    InputStream mockContent = new ByteArrayInputStream(ARTIFACTORY_JSON.getBytes(StandardCharsets.UTF_8));
+    
+    HttpEntity mockEntity = Mockito.mock(HttpEntity.class);
+    Mockito.when(mockEntity.getContent()).thenReturn(mockContent);
+    
+    HttpResponse mockResponse = Mockito.mock(HttpResponse.class);
+    Mockito.when(mockResponse.getEntity()).thenReturn(mockEntity);
+    
+    ArtifactHashes expectedHashes = new ArtifactHashes("3bc73ab2766e277a9fdba25daca73ee963f92756", "126965f55e9cdce6c8b9cdf0260712dd");
+    ArtifactHashes actualHashes = sut.getHashes(mockResponse);
+    assertEquals(expectedHashes, actualHashes);
+  }
+  
+  @Test
+  public void testGetArtifactoryHashes() throws ClientProtocolException, IOException{
     HttpResponse mockResponse = Mockito.mock(HttpResponse.class);
     Mockito.when(mockClient.execute(Mockito.any(HttpRequestBase.class))).thenReturn(mockResponse);
     
+    InputStream mockContent = new ByteArrayInputStream(ARTIFACTORY_JSON.getBytes(StandardCharsets.UTF_8));
+    HttpEntity mockEntity = Mockito.mock(HttpEntity.class);
+    Mockito.when(mockEntity.getContent()).thenReturn(mockContent);
+    Mockito.when(mockResponse.getEntity()).thenReturn(mockEntity);
+    
     StatusLine mockStatusLine = Mockito.mock(StatusLine.class);
     Mockito.when(mockResponse.getStatusLine()).thenReturn(mockStatusLine);
-    Mockito.when(mockStatusLine.getStatusCode()).thenReturn(200); //the artifact doesn't already exist
+    Mockito.when(mockStatusLine.getStatusCode()).thenReturn(200); //sucessfully got the artifact hashes 
     
-    HttpEntity httpEntity = Mockito.mock(HttpEntity.class);
-    Mockito.when(mockResponse.getEntity()).thenReturn(httpEntity);
-    Mockito.when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(ARTIFACTORY_JSON.getBytes(StandardCharsets.UTF_8)));
-    
-    ArtifactHashes calculatedHashes = new ArtifactHashes("sha1", "md5");
-    
-    boolean differ = sut.hashesDiffer(calculatedHashes, extension, "artifactName");
-    assertTrue(differ);
+    ArtifactHashes expectedHashes = new ArtifactHashes("3bc73ab2766e277a9fdba25daca73ee963f92756", "126965f55e9cdce6c8b9cdf0260712dd");
+    ArtifactHashes actualHashes = sut.getArtifactoryHashes(new UploadPluginExtension(), "artifactName");
+    assertEquals(expectedHashes, actualHashes);
   }
   
   @Test
@@ -103,20 +149,5 @@ public class UploadTaskTest extends Assert {
     Mockito.when(mockStatusLine.getStatusCode()).thenReturn(201); //upload was successful
     
     sut.uploadArtifacts(); 
-  }
-  
-  @Test
-  public void testGetHashes() throws IOException{
-    InputStream mockContent = new ByteArrayInputStream(ARTIFACTORY_JSON.getBytes(StandardCharsets.UTF_8));
-    
-    HttpEntity mockEntity = Mockito.mock(HttpEntity.class);
-    Mockito.when(mockEntity.getContent()).thenReturn(mockContent);
-    
-    HttpResponse mockResponse = Mockito.mock(HttpResponse.class);
-    Mockito.when(mockResponse.getEntity()).thenReturn(mockEntity);
-    
-    ArtifactHashes expectedHashes = new ArtifactHashes("3bc73ab2766e277a9fdba25daca73ee963f92756", "126965f55e9cdce6c8b9cdf0260712dd");
-    ArtifactHashes actualHashes = sut.getHashes(mockResponse);
-    assertEquals(expectedHashes, actualHashes);
   }
 }
