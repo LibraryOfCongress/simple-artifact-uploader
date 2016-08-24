@@ -58,6 +58,8 @@ public class UploadTaskTest extends Assert {
     extension.setFolder("folder");
     extension.setRepository("repository");
     extension.setUrl("url");
+    extension.setUsername("username");
+    extension.setPassword("password");
     
     project = ProjectBuilder.builder().build();
     project.getPluginManager().apply(SimpleArtifactUploaderPlugin.class);
