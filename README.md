@@ -68,4 +68,3 @@ Please send us your pull requests! See the [roadmap](#roadmap) or issues for are
 
 ## Roadmap
 - [ ] extend config for controlling other aspects of the rest api requests (timeout, number of tries, etc)
-- [ ] upload artifact with pregenerated checksums instead of having artifactory do it later (causes checksum check to always fail. See [issue #3](https://github.com/LibraryOfCongress/simple-artifact-uploader/issues/3) ) 
