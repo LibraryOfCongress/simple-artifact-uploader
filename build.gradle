@@ -19,14 +19,14 @@ sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 dependencies {
-  compile 'org.slf4j:slf4j-api:latest.integration',
-  'org.apache.httpcomponents:httpclient:latest.integration',
-  'org.apache.httpcomponents:httpmime:latest.integration',
-  'com.google.code.gson:gson:latest.integration'
+  compile 'org.slf4j:slf4j-api:1.7.25',
+  'org.apache.httpcomponents:httpclient:4.5.5',
+  'org.apache.httpcomponents:httpmime:4.5.5',
+  'com.google.code.gson:gson:2.8.5'
   compile gradleApi()
 
-  testCompile 'junit:junit:latest.integration', 
-  'org.mockito:mockito-core:latest.integration'
+  testCompile 'junit:junit:4.12', 
+  'org.mockito:mockito-core:2.19.0'
 }
 
 pluginBundle {
